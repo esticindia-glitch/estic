@@ -25,6 +25,7 @@ import {
 import { cn } from "@/lib/utils"
 
 interface FormData {
+  // Personal Details
   prefix: string
   firstName: string
   middleName: string
@@ -37,26 +38,33 @@ interface FormData {
   alternateMobile: string
   whatsappMobile: string
   designation: string
-  sevenCPC: string
+  cpcLevel: string
   idProofType: string
   idProofNumber: string
-  idProofDocument: File | null
-  inauguralAttendance: string
+
+  // Program Schedule
+  attendInaugural: string
   day2Session1: string
   day2Session2: string
   day3Session1: string
   day3Session2: string
+
+  // Travel Details
   checkinCity: string
   checkinDate: string
   checkinTime: string
   checkoutCity: string
   checkoutDate: string
   checkoutTime: string
-  localTransport: string
-  accommodation: string
+  requireTransport: string
+
+  // Accommodation
+  requireAccommodation: string
   accommodationAddress: string
+
+  // Special Assistance
   specialAssistance: string
-  specialAssistanceDetails: string
+  assistanceDetails: string
   mealPreference: string
 }
 
@@ -282,11 +290,10 @@ export function EsticRegistrationForm() {
     alternateMobile: "",
     whatsappMobile: "",
     designation: "",
-    sevenCPC: "",
+    cpcLevel: "",
     idProofType: "",
     idProofNumber: "",
-    idProofDocument: null,
-    inauguralAttendance: "",
+    attendInaugural: "",
     day2Session1: "",
     day2Session2: "",
     day3Session1: "",
@@ -297,11 +304,11 @@ export function EsticRegistrationForm() {
     checkoutCity: "",
     checkoutDate: "",
     checkoutTime: "",
-    localTransport: "",
-    accommodation: "",
+    requireTransport: "",
+    requireAccommodation: "",
     accommodationAddress: "",
     specialAssistance: "",
-    specialAssistanceDetails: "",
+    assistanceDetails: "",
     mealPreference: "",
   })
 
@@ -322,13 +329,13 @@ export function EsticRegistrationForm() {
       if (!formData.dateOfBirth) newErrors.dateOfBirth = "Date of birth is required"
       if (!formData.gender) newErrors.gender = "Gender is required"
       if (!formData.email.trim()) newErrors.email = "Email is required"
+      else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Invalid email format"
       if (!formData.mobile.trim()) newErrors.mobile = "Mobile number is required"
       if (!formData.whatsappMobile.trim()) newErrors.whatsappMobile = "WhatsApp number is required"
       if (!formData.designation.trim()) newErrors.designation = "Designation is required"
-      if (!formData.sevenCPC.trim()) newErrors.sevenCPC = "7th CPC Level/Band is required"
+      if (!formData.cpcLevel.trim()) newErrors.cpcLevel = "7th CPC Level is required"
       if (!formData.idProofType) newErrors.idProofType = "ID proof type is required"
       if (!formData.idProofNumber.trim()) newErrors.idProofNumber = "ID proof number is required"
-      if (!formData.idProofDocument) newErrors.idProofDocument = "ID proof document is required"
     } else if (currentStep === 2) {
       if (!formData.attendInaugural) newErrors.attendInaugural = "Please select your attendance preference"
       if (!formData.day2Session1) newErrors.day2Session1 = "Please select a session"
@@ -390,22 +397,15 @@ export function EsticRegistrationForm() {
 
       <div className="max-w-4xl mx-auto relative z-10">
         {/* Header */}
-        <div className="text-center space-y-4">
-          <div className="inline-flex items-center space-x-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl shadow-lg">
-            <Calendar className="h-8 w-8" />
-            <div className="text-left">
-              <h1 className="text-3xl font-bold tracking-tight">ESTIC 2025</h1>
-              <p className="text-blue-100 text-sm">The Emerging Science, Technology, and Innovation Conclave</p>
-            </div>
-          </div>
-
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-white/20">
-            <h2 className="text-2xl font-bold text-slate-800 mb-2">Participants Information Registration</h2>
-            <p className="text-slate-600 leading-relaxed">
-              Please fill in the following details accurately IN CAPITALS as per your valid government-issued Photo ID
-              proof.
-            </p>
-          </div>
+        <div className="text-center mb-8">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-slate-800 to-blue-800 bg-clip-text text-transparent mb-3 text-balance">
+            ESTIC 2025
+          </h1>
+          <p className="text-xl text-slate-700 font-medium text-balance">Participants Information Registration</p>
+          <p className="text-sm text-slate-600 mt-3 max-w-2xl mx-auto leading-relaxed">
+            Please fill in the following details accurately IN CAPITALS as per your valid government-issued Photo ID
+            proof.
+          </p>
         </div>
 
         {/* Progress Bar */}
@@ -806,12 +806,12 @@ export function EsticRegistrationForm() {
                     </Label>
                     <Input
                       id="cpcLevel"
-                      value={formData.sevenCPC}
-                      onChange={(e) => updateFormData("sevenCPC", e.target.value)}
+                      value={formData.cpcLevel}
+                      onChange={(e) => updateFormData("cpcLevel", e.target.value)}
                       placeholder="Level/Band"
                       className={cn(
                         "h-12 border-2 transition-all duration-200 font-medium bg-white/50",
-                        errors.sevenCPC
+                        errors.cpcLevel
                           ? "border-red-400 focus:border-red-500"
                           : "border-slate-300 focus:border-blue-500 hover:border-blue-400",
                         focusedField === "cpcLevel" && "ring-2 ring-blue-200 scale-[1.02]",
@@ -819,9 +819,9 @@ export function EsticRegistrationForm() {
                       onFocus={() => setFocusedField("cpcLevel")}
                       onBlur={() => setFocusedField(null)}
                     />
-                    {errors.sevenCPC && (
+                    {errors.cpcLevel && (
                       <p className="text-sm text-red-600 font-medium animate-in slide-in-from-top-2 duration-200">
-                        {errors.sevenCPC}
+                        {errors.cpcLevel}
                       </p>
                     )}
                   </div>
@@ -836,7 +836,7 @@ export function EsticRegistrationForm() {
                     >
                       <SelectTrigger
                         className={cn(
-                          "h-12 border-2 transition-all duration-200 bg-white text-slate-700", // Ensuring solid white background and dark text
+                          "h-12 border-2 transition-all duration-200 bg-white/50",
                           errors.idProofType
                             ? "border-red-400 focus:border-red-500"
                             : "border-slate-300 focus:border-blue-500 hover:border-blue-400",
@@ -844,13 +844,8 @@ export function EsticRegistrationForm() {
                         )}
                         onFocus={() => setFocusedField("idProofType")}
                         onBlur={() => setFocusedField(null)}
-                        style={{ color: "#334155" }} // Adding inline style to force text color
                       >
-                        <SelectValue
-                          placeholder="Select ID proof type"
-                          className="text-slate-700 placeholder:text-slate-500"
-                          style={{ color: "#334155" }} // Adding inline style to force placeholder color
-                        />
+                        <SelectValue placeholder="Select ID proof type" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="passport">Passport</SelectItem>
@@ -892,44 +887,6 @@ export function EsticRegistrationForm() {
                       </p>
                     )}
                   </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="idProofDocument" className="text-sm font-semibold text-slate-700">
-                      Upload ID Proof Document *
-                    </Label>
-                    <div className="relative">
-                      <Input
-                        id="idProofDocument"
-                        type="file"
-                        accept=".pdf,.jpg,.jpeg,.png"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0] || null
-                          updateFormData("idProofDocument", file)
-                        }}
-                        className={cn(
-                          "h-12 border-2 transition-all duration-200 bg-white/50 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100",
-                          errors.idProofDocument
-                            ? "border-red-400 focus:border-red-500"
-                            : "border-slate-300 focus:border-blue-500 hover:border-blue-400",
-                          focusedField === "idProofDocument" && "ring-2 ring-blue-200 scale-[1.02]",
-                        )}
-                        onFocus={() => setFocusedField("idProofDocument")}
-                        onBlur={() => setFocusedField(null)}
-                      />
-                      {formData.idProofDocument && (
-                        <div className="mt-2 text-sm text-green-600 font-medium">
-                          ✓ {formData.idProofDocument.name} ({(formData.idProofDocument.size / 1024 / 1024).toFixed(2)}{" "}
-                          MB)
-                        </div>
-                      )}
-                    </div>
-                    {errors.idProofDocument && (
-                      <p className="text-sm text-red-600 font-medium animate-in slide-in-from-top-2 duration-200">
-                        {errors.idProofDocument}
-                      </p>
-                    )}
-                    <p className="text-xs text-slate-500">Accepted formats: PDF, JPG, JPEG, PNG (Max size: 5MB)</p>
-                  </div>
                 </div>
               </div>
             )}
@@ -943,8 +900,8 @@ export function EsticRegistrationForm() {
                       Are you willing to attend Inaugural Programme by Hon'ble Prime Minister? *
                     </Label>
                     <RadioGroup
-                      value={formData.inauguralAttendance}
-                      onValueChange={(value) => updateFormData("inauguralAttendance", value)}
+                      value={formData.attendInaugural}
+                      onValueChange={(value) => updateFormData("attendInaugural", value)}
                       className="flex flex-row space-x-8 pt-2"
                     >
                       {[
@@ -1318,8 +1275,8 @@ export function EsticRegistrationForm() {
                 <div className="space-y-3">
                   <Label className="text-sm font-semibold text-slate-700">Do you require Local Transport? *</Label>
                   <RadioGroup
-                    value={formData.localTransport}
-                    onValueChange={(value) => updateFormData("localTransport", value)}
+                    value={formData.requireTransport}
+                    onValueChange={(value) => updateFormData("requireTransport", value)}
                     className="flex flex-row space-x-8 pt-2"
                   >
                     {[
@@ -1356,8 +1313,8 @@ export function EsticRegistrationForm() {
                 <div className="space-y-3">
                   <Label className="text-sm font-semibold text-slate-700">Do you require Accommodation? *</Label>
                   <RadioGroup
-                    value={formData.accommodation}
-                    onValueChange={(value) => updateFormData("accommodation", value)}
+                    value={formData.requireAccommodation}
+                    onValueChange={(value) => updateFormData("requireAccommodation", value)}
                     className="flex flex-row space-x-8 pt-2"
                   >
                     {[
@@ -1386,7 +1343,7 @@ export function EsticRegistrationForm() {
                   )}
                 </div>
 
-                {formData.accommodation === "no" && (
+                {formData.requireAccommodation === "no" && (
                   <div className="space-y-3">
                     <Label htmlFor="accommodationAddress" className="text-sm font-semibold text-slate-700">
                       Please provide your accommodation Address *
@@ -1473,8 +1430,8 @@ export function EsticRegistrationForm() {
                     </Label>
                     <Textarea
                       id="assistanceDetails"
-                      value={formData.specialAssistanceDetails}
-                      onChange={(e) => updateFormData("specialAssistanceDetails", e.target.value)}
+                      value={formData.assistanceDetails}
+                      onChange={(e) => updateFormData("assistanceDetails", e.target.value)}
                       placeholder="Please describe the special assistance you require"
                       rows={3}
                       className={cn(
@@ -1552,31 +1509,31 @@ export function EsticRegistrationForm() {
                 onClick={prevStep}
                 disabled={currentStep === 1}
                 className={cn(
-                  "flex items-center space-x-3 h-12 px-6 border-2 transition-all duration-200 bg-white text-slate-700", // Changed from bg-white/50 to bg-white and added text-slate-700
+                  "flex items-center space-x-3 h-12 px-6 border-2 transition-all duration-200 bg-white/50",
                   currentStep === 1
                     ? "opacity-50 cursor-not-allowed"
                     : "hover:bg-slate-100 hover:border-slate-400 hover:scale-105 active:scale-95",
                 )}
               >
                 <ChevronLeft className="w-5 h-5" />
-                <span className="font-medium text-slate-700">Previous</span> {/* Added explicit text-slate-700 */}
+                <span className="font-medium">Previous</span>
               </Button>
 
               {currentStep < steps.length ? (
                 <Button
                   onClick={nextStep}
-                  className="flex items-center space-x-3 h-12 px-6 bg-blue-600 hover:bg-blue-700 text-white transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl" // Simplified to solid blue background instead of gradient to ensure proper contrast
+                  className="flex items-center space-x-3 h-12 px-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
                 >
-                  <span className="font-medium text-white">Next Step</span> {/* Explicit text-white */}
-                  <ChevronRight className="w-5 h-5 text-white" /> {/* Added text-white to icon */}
+                  <span className="font-medium">Next Step</span>
+                  <ChevronRight className="w-5 h-5" />
                 </Button>
               ) : (
                 <Button
                   onClick={handleSubmit}
-                  className="flex items-center space-x-3 h-12 px-6 bg-green-600 hover:bg-green-700 text-white transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl" // Simplified to solid green background instead of gradient
+                  className="flex items-center space-x-3 h-12 px-6 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
                 >
-                  <span className="font-medium text-white">Submit Registration</span> {/* Explicit text-white */}
-                  <CheckCircle className="w-5 h-5 text-white" /> {/* Added text-white to icon */}
+                  <span className="font-medium">Submit Registration</span>
+                  <CheckCircle className="w-5 h-5" />
                 </Button>
               )}
             </div>
@@ -1585,7 +1542,7 @@ export function EsticRegistrationForm() {
 
         {/* Footer */}
         <div className="text-center mt-8 text-sm text-slate-600 bg-white/30 backdrop-blur-sm rounded-lg p-4 border border-slate-200">
-          <p className="font-semibold">ESTIC 2025 - The Emerging Science, Technology, and Innovation Conclave</p>
+          <p className="font-semibold">ESTIC 2025 - Excellence in Science, Technology & Innovation Conference</p>
           <p className="mt-2">For technical support, please contact the organizing committee.</p>
         </div>
       </div>
